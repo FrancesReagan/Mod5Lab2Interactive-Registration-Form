@@ -14,11 +14,14 @@ const successMessage = document.getElementById("successMessage");
 
 console.log("All the elements from the page retrieved:)");
 
-//When the page loads, check if there's a username saved"
+//When the page loads, check if there's a username saved"//
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Page loaded, checking for saved username...");
+
   //Check if there's a saved username//
   const savedUsername = localStorage.getItem("username");
+
+
   //If there is a username, put it in the form//
   if (savedUsername) {
     console.log(`Found saved username: ${savedUsername}`);
@@ -29,188 +32,220 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Add event listeners to check inputs as the user types
-usernameInput.addEventListener('input', checkUsername);
-emailInput.addEventListener('input', checkEmail);
-passwordInput.addEventListener('input', checkPassword);
-confirmPasswordInput.addEventListener('input', checkConfirmPassword);
+// Add event listeners to check inputs as the user types//
+usernameInput.addEventListener('input', validateUsername);
+emailInput.addEventListener('input', validateEmail);
+passwordInput.addEventListener('input', validatePassword);
+confirmPasswordInput.addEventListener('input', validateConfirmPassword);
 
 console.log("Added all the input listeners");
 
 
-// When the form is submitted
-registrationForm.addEventListener('submit', function(event) {
-  // Prevent the form from actually submitting to a server
+// When the form is submitted//
+form.addEventListener('submit', function(event) {
+  // Prevent the form from actually submitting to a server//
   event.preventDefault();
   console.log("Form was submitted");
 
 //Check all fields//
-  const isUsernameOk = checkUsername();
-  const isEmailOk = checkEmail();
-  const isPasswordOk = checkPassword();
-  const isConfirmPasswordOk = checkConfirmPassword();
+  const isUsernameOk = validateUsername();
+  const isEmailOk = validateEmail();
+  const isPasswordOk = validatePassword();
+  const isConfirmPasswordOk = validateConfirmPassword();
 
 
   //log to see results//
-  console.log("Username valid: " + (isUsernameOk ? "yes" : "no"));
-  console.log("Email valid: " + (isEmailOk ? "yes" : "no"));
-  console.log("Password valid: " + (isPasswordOk ? "yes" : "no"));
-  console.log("Confirm password valid: " + (isConfirmPasswordOk ? "yes" : "no"));
+  console.log("Username valid: " + (isUsernameValid ? "yes" : "no"));
+  console.log("Email valid: " + (isEmailValid ? "yes" : "no"));
+  console.log("Password valid: " + (isPasswordValid ? "yes" : "no"));
+  console.log("Confirm password valid: " + (isConfirmPasswordValid ? "yes" : "no"));
 
 
-  // If all fields are valid
-  if (isUsernameOk && isEmailOk && isPasswordOk && isConfirmPasswordOk) {
-    console.log("All fields are valid!");
+  // If all fields are valid//
+  if (isUsernameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
+    console.log("All fields are valid");
 
- // Save the username
+ // Save the username//
  localStorage.setItem('username', usernameInput.value);
  console.log("Saved username: " + usernameInput.value);
 
 
-// Show success message
-    successMessageBox.textContent = 'Registration successful!';
+// Show success message//
+    successMessageBox.textContent = 'Registration successful';
     successMessageBox.style.display = 'block';
     console.log("Showing success message");
     
-    // Hide success message after 3 seconds
+    // Hide success message after 3 seconds//
     setTimeout(function() {
       successMessageBox.style.display = 'none';
       console.log("Hiding success message");
     }, 3000);
     
-    // Clear the form except username
-    emailInput.value = '';
-    passwordInput.value = '';
-    confirmPasswordInput.value = '';
+    // Clear the form except username//
+    email.value = "";
+    password.value = "";
+    confirmPassword.value = "";
     console.log("Cleared the form except username");
     
-    // Remove validation styling
-    emailInput.style.borderColor = '#ddd';
-    passwordInput.style.borderColor = '#ddd';
-    confirmPasswordInput.style.borderColor = '#ddd';
+    // Remove validation styling//
+    email.classList.remove("valid");
+    password.classList.remove("valid");
+    confirmPassword.classList.remove("valid");
     
-    // Clear all error messages
+    // Clear all error messages//
     clearAllErrors();
   } else {
     console.log("Some fields are not valid");
     
     // Focus on the first invalid field
-    if (!isUsernameOk) {
-      usernameInput.focus();
+    if (!isUsernameValid) {
+      username.focus();
       console.log("Focusing on username field");
-    } else if (!isEmailOk) {
-      emailInput.focus();
+    } else if (!isEmailValid) {
+      email.focus();
       console.log("Focusing on email field");
-    } else if (!isPasswordOk) {
-      passwordInput.focus();
+    } else if (!isPasswordValid) {
+      password.focus();
       console.log("Focusing on password field");
     } else {
-      confirmPasswordInput.focus();
+      confirmPassword.focus();
       console.log("Focusing on confirm password field");
     }
   }
 });
 
-// Function to check if username is valid
-function checkUsername() {
-  console.log("Checking username");
+// Function to validate username using constraint validation api//
+function validateUsername() {
+  console.log("Validating username");
   
   // Clear the error message
-  usernameErrorMessage.textContent = '';
+  usernameError.textContent = "";
   
-  // Get the username value and remove spaces at beginning and end
-  const username = usernameInput.value.trim();
+  // Get the username value and remove spaces at beginning and end//
+  const value = username.value.trim();
   
-  // Check if it's empty
-  if (username === '') {
-    usernameErrorMessage.textContent = 'Username is required';
-    usernameInput.style.borderColor = 'red';
+  // Check for validity using the constraint validation api//
+  if (username.validity.valueMissing) {
+    usernameError.textContent = "Username is required";
+    username.classList.remove("valid");
     console.log("Username is empty");
     return false;
   }
   
-  // Check if it's at least 3 characters
-  if (username.length < 3) {
-    usernameErrorMessage.textContent = 'Username must be at least 3 characters';
-    usernameInput.style.borderColor = 'red';
-    console.log("Username is too short: " + username.length + " characters");
+  // Check if it's at least 3 characters//
+  if (username.validity.tooShort) {
+    usernameError.textContent = "Username must be at least 3 characters";
+    username.classList.remove("valid");
+    console.log("Username is too short: " + value.length + " characters");
     return false;
   }
   
-  // If we got here, username is valid
-  usernameInput.style.borderColor = 'green';
+  // If we got here, username is valid//
+  username.classList.add("valid");
   console.log("Username is valid");
   return true;
 }
 
-// Function to check if email is valid
-function checkEmail() {
-  console.log("Checking email");
+// Function to validate email using constraint validation api//
+function validateEmail() {
+  console.log("Validating email");
   
   // Clear the error message
-  emailErrorMessage.textContent = '';
+  emailError.textContent = "";
   
-  // Get the email value and remove spaces
-  const email = emailInput.value.trim();
-  
-  // Check if it's empty
-  if (email === '') {
-    emailErrorMessage.textContent = 'Email is required';
-    emailInput.style.borderColor = 'red';
+  // Check for validity using the constraint validation api//
+  if (email.validity.valueMissing) {
+    emailError.textContent = "Email is required";
+    email.classList.remove("valid");
     console.log("Email is empty");
     return false;
   }
   
-  // Check if it has @ and .
-  if (!email.includes('@') || !email.includes('.')) {
-    emailErrorMessage.textContent = 'Please enter a valid email address';
-    emailInput.style.borderColor = 'red';
-    console.log("Email is not valid format: " + email);
+  
+  if (!email.validity.typeMismatch) {
+    emailError.textContent = "Please enter a valid email address";
+    email.classList.remove("valid");
+    console.log("Email is not valid format: " + email.value);
     return false;
   }
   
-  // If we got here, email is valid
-  emailInput.style.borderColor = 'green';
+  // If we got here, email is valid//
+  email.classList.add("valid");
   console.log("Email is valid");
   return true;
 }
 
-// Function to check if password is valid
-function checkPassword() {
-  console.log("Checking password");
+// Function to validate password using constraint validation api//
+function validatePassword() {
+  console.log("Validating password");
   
-  // Clear the error message
-  passwordErrorMessage.textContent = '';
+  // Clear the error message//
+  passwordError.textContent = "";
   
-  // Get the password
+  // Get the password//
   const password = passwordInput.value;
   
-  // Check if it's empty
-  if (password === '') {
-    passwordErrorMessage.textContent = 'Password is required';
-    passwordInput.style.borderColor = 'red';
+  // Check for validity using the constraint validation api//
+  if (password.validity.valueMissing) {
+    passwordError.textContent = "Password is required";
+    password.classList.remove("valid");
     console.log("Password is empty");
     return false;
   }
   
   // Check if it's at least 8 characters
-  if (password.length < 8) {
-    passwordErrorMessage.textContent = 'Password must be at least 8 characters';
-    passwordInput.style.borderColor = 'red';
-    console.log("Password is too short: " + password.length + " characters");
+  if (password.validity.tooShort) {
+    passwordError.textContent = "Password must be at least 8 characters";
+    password.classList.remove("valid");
+    console.log("Password is too short: " + password.value.length + " characters");
     return false;
   }
   
-  // Check if it has uppercase
-  let hasUppercase = false;
-  for (let i = 0; i < password.length; i++) {
-    const char = password.charAt(i);
-    if (char === char.toUpperCase() && char !== char.toLowerCase()) {
-      hasUppercase = true;
-      break;
-    }
+
+  if (password.validity.patternMismatch) {
+    // need to determine which part of the pattern is missing//
+    const hasUppercase = /[A-Z]/.test(password.value);
+    const hasLowercase = /[a-z]/.test(password.value);
+    const hasNumber = /[0-9]/.test(password.value);
+
+    if (!hasUppercase) {
+      passwordError.textContent = "Password must have at least one uppercase letter";
+  } else if (!hasLowercase) {
+    passwordError.textContent = "Password must have at least one lowercase letter";
+  } else if (!hasNumber) {
+    passwordError.textContent = "Password must have at least one number";
+  } else {
+    passwordError.textContent = "Password  must meet the required pattern";
   }
+    passwored.classList.remove("valid");
+    console.log("Password pattern mismatch");
+    return false;
+  }
+  // if here, password is valid//
+  password.classList.add("valid");
+  console.log("Password is valid");
+  return true;
+}
+
+// Function to validate confirm password//
+function validateConfirmPassword() {
+  console.log("Validating confirm password");
+
+  //Clear the error message//
+  confirmPasswordError.textContent = "";
+
+  //check for validity using the constraint validation api//
+  if (confirmPassword.validity.valueMissing) {
+    confirmPasswordError.textContent = "Please confirm your password";
+    confirmPasswordError.classList.remove("valid");
+    console.log("Confirm password is empty");
+    return false;
+  }
+  //check if passwords match (this is not part of built-in validation)//
   
+}
+}
+
   if (!hasUppercase) {
     passwordErrorMessage.textContent = 'Password must have at least one uppercase letter';
     passwordInput.style.borderColor = 'red';

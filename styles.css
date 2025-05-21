@@ -40,12 +40,17 @@ h1 {
   border-radius: 4px;
   box-sizing: border-box;
 }
+
+.form-group input.valid {
+  border-color: #2ecc71;
+}
  
 .form-group .error-message {
   display: block;
   color: #e74c3c;
   font-size: 0.9em;
   margin-top: 5px;
+  min-height: 1em;
 }
  
 .form-group small {

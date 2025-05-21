@@ -242,103 +242,24 @@ function validateConfirmPassword() {
     return false;
   }
   //check if passwords match (this is not part of built-in validation)//
-  
-}
-}
-
-  if (!hasUppercase) {
-    passwordErrorMessage.textContent = 'Password must have at least one uppercase letter';
-    passwordInput.style.borderColor = 'red';
-    console.log("Password has no uppercase letters");
-    return false;
-  }
-  
-  // Check if it has lowercase
-  let hasLowercase = false;
-  for (let i = 0; i < password.length; i++) {
-    const char = password.charAt(i);
-    if (char === char.toLowerCase() && char !== char.toUpperCase()) {
-      hasLowercase = true;
-      break;
-    }
-  }
-  
-  if (!hasLowercase) {
-    passwordErrorMessage.textContent = 'Password must have at least one lowercase letter';
-    passwordInput.style.borderColor = 'red';
-    console.log("Password has no lowercase letters");
-    return false;
-  }
-  
-  // Check if it has a number
-  let hasNumber = false;
-  for (let i = 0; i < password.length; i++) {
-    const char = password.charAt(i);
-    if (!isNaN(parseInt(char))) {
-      hasNumber = true;
-      break;
-    }
-  }
-  
-  if (!hasNumber) {
-    passwordErrorMessage.textContent = 'Password must have at least one number';
-    passwordInput.style.borderColor = 'red';
-    console.log("Password has no numbers");
-    return false;
-  }
-  
-  // If we got here, password is valid
-  passwordInput.style.borderColor = 'green';
-  console.log("Password is valid");
-  return true;
-}
-
-// Function to check if confirm password is valid
-function checkConfirmPassword() {
-  console.log("Checking confirm password");
-  
-  // Clear the error message
-  confirmPasswordErrorMessage.textContent = '';
-  
-  // Get both passwords
-  const password = passwordInput.value;
-  const confirmPassword = confirmPasswordInput.value;
-  
-  // Check if confirm password is empty
-  if (confirmPassword === '') {
-    confirmPasswordErrorMessage.textContent = 'Please confirm your password';
-    confirmPasswordInput.style.borderColor = 'red';
-    console.log("Confirm password is empty");
-    return false;
-  }
-  
-  // Check if passwords match
-  if (password !== confirmPassword) {
-    confirmPasswordErrorMessage.textContent = 'Passwords do not match';
-    confirmPasswordInput.style.borderColor = 'red';
+  if (password.value !== confirmPassword.value) {
+    confirmPasswordError.textContent = "Passwords do not match";
+    confirmPassword.classList.remove("valid");
     console.log("Passwords don't match");
     return false;
   }
-  
-  // If we got here, confirm password is valid
-  confirmPasswordInput.style.borderColor = 'green';
+  //if got here, confirm password is valid//
+  confirmPassword.classList.add("valid");
   console.log("Confirm password is valid");
   return true;
 }
-
-// Function to clear all error messages
+//function to clear all error messages//
 function clearAllErrors() {
   console.log("Clearing all errors");
-  
-  // Clear all error message text
-  usernameErrorMessage.textContent = '';
-  emailErrorMessage.textContent = '';
-  passwordErrorMessage.textContent = '';
-  confirmPasswordErrorMessage.textContent = '';
-  
-  // Reset border colors
-  usernameInput.style.borderColor = '#ddd';
-  emailInput.style.borderColor = '#ddd';
-  passwordInput.style.borderColor = '#ddd';
-  confirmPasswordInput.style.borderColor = '#ddd';
+
+  //clear all error message text//
+  usernameError.textContent = "";
+  emailError.textContent = "";
+  passwordError.textContent = "";
+  confirmPasswordError.textContent="";
 }
